@@ -4,7 +4,7 @@ const { Book } = db;
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+/* GET books listing. */
 router.get('/', function(req, res, next) {
   (async () => {
     try {
@@ -16,5 +16,18 @@ router.get('/', function(req, res, next) {
     }
   })();
 });
+
+/* GET books/new page. */
+router.get('/new', function(req, res, next) {
+  res.render('books-new', { title: 'Add a New Book' });
+});
+
+/* GET books/new page. */
+router.get('/:id', function(req, res, next) {
+  res.render('book', { title: 'Update Book' });
+});
+
+
+
 
 module.exports = router;

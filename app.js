@@ -7,6 +7,20 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const db = require('./models');
+const { Book } = db;
+
+(async () => {
+  await db.sequelize.sync();
+  try {
+  const bookById = await Book.findByPk(1);
+    console.log('id 1: ', bookById.toJSON());
+  } catch (error) {
+    console.log(error);
+    //throw error;
+  }
+})();
+
 var app = express();
 
 // view engine setup

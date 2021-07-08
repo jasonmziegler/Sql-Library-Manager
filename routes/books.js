@@ -22,7 +22,7 @@ router.get('/new', function(req, res, next) {
   res.render('books-new', { title: 'Add a New Book' });
 });
 
-/* GET books/new page. */
+/* GET books/id page. */
 router.get('/:id', function(req, res, next) {
   res.render('book', { title: 'Update Book' });
 });

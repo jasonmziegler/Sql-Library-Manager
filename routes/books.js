@@ -4,18 +4,26 @@ const { Book } = db;
 var express = require('express');
 var router = express.Router();
 
-/* GET books listing. */
-router.get('/', function(req, res, next) {
-  (async () => {
+/* Handler function to wrap each route. from Treehouse video https://teamtreehouse.com/library/create-entries*/
+function asyncHandler(cb) {
+  return async(req, res, next) => {
     try {
+      await cb(req, res, next);
+    } catch(error) {
+      res.status(500).send(error);
+    }
+
+  }
+}
+
+// TODO: figure out how to write async routes, and post to routes. probably need to redo the project files course.
+
+/* GET books listing.*/
+router.get('/', asyncHandler( async (req, res, next) => {
     const books = await Book.findAll();
     //res.json(books);
-    res.render('books', { title: 'Books' });
-    } catch (error) {
-      console.log(error);
-    }
-  })();
-});
+    res.render('books', { title: 'Books', books });    
+}));
 
 /* GET books/new page. */
 router.get('/new', function(req, res, next) {

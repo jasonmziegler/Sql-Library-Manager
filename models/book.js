@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Please provide a value for "author"',
         },
         notEmpty: {
-          msg: 'Please provide a value for "title"',
+          msg: 'Please provide a value for "author"',
         },
       }
     },

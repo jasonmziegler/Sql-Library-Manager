@@ -2,6 +2,7 @@ const db = require('../models');
 const { Book } = db;
 
 var express = require('express');
+const book = require('../models/book');
 var router = express.Router();
 
 /* Handler function to wrap each route. from Treehouse video https://teamtreehouse.com/library/create-entries*/
@@ -32,11 +33,19 @@ router.get('/new', function(req, res, next) {
 
 /* POST books/new page. */
 router.post('/new', asyncHandler(async (req, res) => {
-  
+  let book;
   console.log(req.body);
-  const book = await Book.create(req.body);
+  try {
+    book = await Book.create(req.body);
+    res.redirect("/books/" + book.id); // will eventually add article.id to path
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      res.render("books-new", { book , errors: error.errors, title: 'Add a New Book' });
+    } else {
+      throw error;
+    }
+  }
   
-  res.redirect("/books/" + book.id); // will eventually add article.id to path
 }));
 
 /* GET books/id page. */
@@ -64,15 +73,31 @@ router.post('/:id', asyncHandler( async (req, res) => {
       res.sendStatus(404);
     }
   } catch(error) {
-    if(error.name === "SequelizeValidationError") {
-      book = await Article.build(req.body);
-      book.id = req.params.id; // make sure correct article gets updated
-      res.render("/books/"+req.params.id, { book, errors: error.errors})
+    //console.log('Error: ', error.errors);
+    //console.log('Error Name: ', error.name);
+    if (error.name === "SequelizeValidationError") {
+      //console.log('Validation Error: ', error.errors);
+      //book = await Article.build(req.body);
+      //book.id = req.params.id; // make sure correct article gets updated
+      res.render("book", { book , errors: error.errors, title: book.title })
+      //res.redirect("/books/"+ book.id);
     } else {
       throw error;
     }
   }
 }));
+
+/* DELETE books/id/delete route */
+router.post('/:id/delete', asyncHandler( async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  if (book) {
+    await book.destroy();
+    res.redirect("/books");
+  } else {
+    res.sendStatus(404);
+  }
+}));
+
 
 
 

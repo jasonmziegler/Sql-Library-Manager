@@ -49,10 +49,11 @@ router.get('/:id', asyncHandler( async (req, res, next) => {
   // use id to find book in db
   const book = await Book.findByPk(req.params.id);
   // pass book to render template
-  if (book) {
-    res.render('book', { book});
+    if (book) {
+    res.render('book', { book });
   } else {
-    res.sendStatus(404);
+    // res.sendStatus(404);
+    res.render('page-not-found', {title: 'Page Not Found'});
   }
 }));
 

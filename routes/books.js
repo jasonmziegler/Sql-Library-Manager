@@ -25,7 +25,7 @@ router.get('/', asyncHandler( async (req, res, next) => {
 
 /* GET books/new page. */
 router.get('/new', function(req, res, next) {
-  res.render('books-new', { title: 'Add a New Book' });
+  res.render('new-book', { title: 'Add a New Book' });
 });
 
 /* POST books/new page. */
@@ -47,14 +47,35 @@ router.post('/new', asyncHandler(async (req, res) => {
 /* GET books/id page. */
 router.get('/:id', asyncHandler( async (req, res, next) => {
   // use id to find book in db
-  const book = await Book.findByPk(req.params.id);
-  // pass book to render template
+  try {
+    const book = await Book.findByPk(req.params.id);
     if (book) {
-    res.render('book', { book });
-  } else {
-    // res.sendStatus(404);
-    res.render('page-not-found', {title: 'Page Not Found'});
+      res.render('book', { book });
+    } else {
+    console.log('Book request else statement called books.js line55');
+    const err = new Error();
+    err.message = '404 Page Not Found'
+    err.status = 404;
+    next(err);
+    //res.sendStatus(404);
+    }
+    
+  } catch(error)  {
+    
+    throw error;
   }
+  
+  // pass book to render template
+  //   if (book) {
+  //   res.render('book', { book });
+  // } else {
+  //   //res.sendStatus(404);
+  //   const err = new Error();
+  //   err.message = '404 Page Not Found'
+  //   err.status = 404;
+  //   //res.render('page-not-found', {title: 'Page Not Found'});
+  //   throw err;
+  // }
 }));
 
 /* POST books/id route. */
